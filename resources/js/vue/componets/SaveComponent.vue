@@ -230,7 +230,7 @@ export default {
                 const formData = new FormData()
 
                 formData.append('image', val[val.length-1])
-                this.$axios.post(this.$root.urls.getCategoriesAll+this.post.id, formData, {
+                this.$axios.post(this.$root.urls.postUpload+this.post.id, formData, {
                     headers: {
                         'Content-Type' : 'multipart/form-data'
                     }
