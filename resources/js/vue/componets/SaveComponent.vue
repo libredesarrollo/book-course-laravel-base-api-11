@@ -1,74 +1,78 @@
 <template>
+    <div class='container mx-auto'>
+        <div class="mt-6 mb-2 px-6 py-4 bg-white shadow-md rounded-md">
+            <h1 v-if="post">Update Post <span class="font-bold">{{ post.title }}</span></h1>
+            <h1 v-else>Create Post</h1>
 
-    <h1 v-if="post">Update Post <span class="font-bold">{{ post.title }}</span></h1>
-    <h1 v-else>Create Post</h1>
+            <div class="grid grid-cols-2 gap-3">
+                <div class="col-span-2">
+                    <o-field label="Title" :variant="errors.title ? 'danger' : 'primary'" :message="errors.title">
+                        <o-input v-model="form.title"></o-input>
+                    </o-field>
+                </div>
+                <o-field label="Content" :variant="errors.content ? 'danger' : 'primary'" :message="errors.content">
+                    <o-input v-model="form.content" type="textarea"></o-input>
+                </o-field>
+                <o-field label="Description" :variant="errors.description ? 'danger' : 'primary'"
+                    :message="errors.description">
+                    <o-input v-model="form.description" type="textarea"></o-input>
+                </o-field>
+                <o-field label="Slug" :variant="errors.slug ? 'danger' : 'primary'" :message="errors.slug">
+                    <o-input v-model="form.slug"></o-input>
+                </o-field>
+                <o-field label="Posted" :variant="errors.posted ? 'danger' : 'primary'" :message="errors.posted">
+                    <o-select v-model="form.posted" placeholder="Selected a option">
+                        <option value="yes">Yes</option>
+                        <option value="Not">No</option>
+                    </o-select>
+                </o-field>
+                <o-field label="Category" :variant="errors.category_id ? 'danger' : 'primary'"
+                    :message="errors.category_id">
+                    <o-select v-model="form.category_id" placeholder="Selected a option">
+                        <option value=""></option>
+                        <option v-for="c in categories" v-bind:key="c.id" :value="c.id">{{ c.title }}</option>
+                    </o-select>
+                </o-field>
 
-    <div class="grid grid-cols-2 gap-3">
-        <div class="col-span-2">
-            <o-field label="Title" :variant="errors.title ? 'danger' : 'primary'" :message="errors.title">
-                <o-input v-model="form.title"></o-input>
-            </o-field>
-        </div>
-        <o-field label="Content" :variant="errors.content ? 'danger' : 'primary'" :message="errors.content">
-            <o-input v-model="form.content" type="textarea"></o-input>
-        </o-field>
-        <o-field label="Description" :variant="errors.description ? 'danger' : 'primary'" :message="errors.description">
-            <o-input v-model="form.description" type="textarea"></o-input>
-        </o-field>
-        <o-field label="Slug" :variant="errors.slug ? 'danger' : 'primary'" :message="errors.slug">
-            <o-input v-model="form.slug"></o-input>
-        </o-field>
-        <o-field label="Posted" :variant="errors.posted ? 'danger' : 'primary'" :message="errors.posted">
-            <o-select v-model="form.posted" placeholder="Selected a option">
-                <option value="yes">Yes</option>
-                <option value="Not">No</option>
-            </o-select>
-        </o-field>
-        <o-field label="Category" :variant="errors.category_id ? 'danger' : 'primary'" :message="errors.category_id">
-            <o-select v-model="form.category_id" placeholder="Selected a option">
-                <option value=""></option>
-                <option v-for="c in categories" v-bind:key="c.id" :value="c.id">{{ c.title }}</option>
-            </o-select>
-        </o-field>
 
+            </div>
+            <div class="mt-3"></div>
+            <o-button variant="primary" @click="send">Send</o-button>
 
-    </div>
-    <div class="mt-3"></div>
-    <o-button variant="primary" @click="send">Send</o-button>
+            <div class="flex gap-2 mt-5" v-if="post">
+                <o-field :message="fileError" :variant="fileError ? 'danger' : 'primary'">
+                    <o-upload v-model="file">
+                        <o-button tag="upload-tag" variant="primary">
+                            <o-icon icon="upload"></o-icon>
+                            <span>Click to upload</span>
+                        </o-button>
+                    </o-upload>
+                </o-field>
 
-    <div class="flex gap-2 mt-5" v-if="post">
-        <o-field :message="fileError" :variant="fileError ? 'danger' : 'primary'">
-            <o-upload v-model="file">
-                <o-button tag="upload-tag" variant="primary">
-                    <o-icon icon="upload"></o-icon>
-                    <span>Click to upload</span>
+                <o-button icon-left="upload" @click="upload">
+                    Upload
                 </o-button>
-            </o-upload>
-        </o-field>
 
-        <o-button icon-left="upload" @click="upload">
-            Upload
-        </o-button>
-        
+            </div>
+
+            <h3>Drag and Drop</h3>
+
+            <o-field :message="fileError" :variant="fileError ? 'danger' : 'primary'">
+                <o-upload v-model="filesDaD" multiple drag-drop>
+
+                    <section>
+                        <o-icon icon="upload"></o-icon>
+                        <span>Drag and Drop area</span>
+                    </section>
+
+                </o-upload>
+            </o-field>
+
+            <span v-for="(file, index) in filesDaD" :key="index">
+                {{ file.name }}
+            </span>
+        </div>
     </div>
-
-    <h3>Drag and Drop</h3>
-
-    <o-field :message="fileError" :variant="fileError ? 'danger' : 'primary'">
-        <o-upload v-model="filesDaD" multiple drag-drop>
-            
-                <section>
-                    <o-icon icon="upload"></o-icon>
-                    <span>Drag and Drop area</span>
-                </section>
-            
-        </o-upload>
-    </o-field>
-
-    <span v-for="(file, index) in filesDaD" :key="index" >
-        {{ file.name }}
-    </span>
-
 </template>
 <script>
 export default {
@@ -102,14 +106,14 @@ export default {
                 category_id: '',
                 posted: '',
             },
-            fileError:'',
+            fileError: '',
             file: null,
-            filesDaD:[],
+            filesDaD: [],
             categories: []
         }
     },
     methods: {
-        
+
         initPost() {
             this.form.title = this.post.title
             this.form.content = this.post.content
@@ -119,19 +123,21 @@ export default {
             this.form.category_id = this.post.category_id
         },
 
-        upload(){
-            this.fileError=''
+        upload() {
+
+            this.fileError = ''
             const formData = new FormData()
 
             formData.append('image', this.file)
-            this.$axios.post(this.$root.urls.postUpload+this.post.id, formData, {
+            this.$axios.post(this.$root.urls.postUpload + this.post.id, formData, {
                 headers: {
-                    'Content-Type' : 'multipart/form-data'
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${this.$root.token}`
                 }
-            }).then((res)=> {
+            }).then((res) => {
                 console.log(res);
-            }).catch((error)=> {
-                this.fileError=error.response.data.message
+            }).catch((error) => {
+                this.fileError = error.response.data.message
 
             })
         },
@@ -151,17 +157,21 @@ export default {
         },
         send() {
             this.cleanErrorsForm()
-
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${this.$root.token}`
+                }
+            }
             if (this.post == '') {
                 // create
-                this.$axios.post(this.$root.urls.postPost, this.form).then(res => {
+                this.$axios.post(this.$root.urls.postPost, this.form, config).then(res => {
                     console.log(res)
 
                     this.$oruga.notification.open({
                         message: 'Record created success',
-                        position:'bottom-right',
+                        position: 'bottom-right',
                         duration: 4000,
-                        closable:true
+                        closable: true
                     })
 
                 }).catch(error => {
@@ -186,14 +196,14 @@ export default {
                 })
             } else {
                 // update
-                this.$axios.patch(this.$root.urls.postPatch + this.post.id, this.form).then(res => {
+                this.$axios.patch(this.$root.urls.postPatch + this.post.id, this.form, config).then(res => {
 
                     this.$oruga.notification.open({
                         message: 'Record updated success',
-                        position:'bottom-right',
+                        position: 'bottom-right',
                         duration: 4000,
-                        closable:true
-                    })   
+                        closable: true
+                    })
 
                     console.log(res)
                 }).catch(error => {
@@ -221,25 +231,25 @@ export default {
 
         }
     },
-    watch:{
+    watch: {
         filesDaD: {
             handler(val) {
                 // return console.log(val[val.length-1])
 
-                this.fileError=''
+                this.fileError = ''
                 const formData = new FormData()
 
-                formData.append('image', val[val.length-1])
-                this.$axios.post(this.$root.urls.postUpload+this.post.id, formData, {
+                formData.append('image', val[val.length - 1])
+                this.$axios.post(this.$root.urls.postUpload + this.post.id, formData, {
                     headers: {
-                        'Content-Type' : 'multipart/form-data'
+                        'Content-Type': 'multipart/form-data'
                     }
-                }).then((res)=> {
+                }).then((res) => {
                     console.log(res);
-                }).catch((error)=> {
-                    this.fileError=error.response.data.message
+                }).catch((error) => {
+                    this.fileError = error.response.data.message
 
-                })  
+                })
             },
             deep: true
         }

@@ -10,8 +10,28 @@
 
 </head>
 <body>
-    <div class='container mx-auto'>
+
+    @if (Auth::check())
+        <script>
+            window.Laravel = {!! json_encode([
+                'isLoggedIn' => true,
+                'user' => Auth::user(),
+                'token' => session('token'),
+            ]) !!}
+        </script>
+    @else
+    <script>
+        window.Laravel = {!! json_encode([
+            'isLoggedIn' => false
+        ]) !!}
+    </script>
+
+    @endif
+
+    <div>
         <div id="app"></div>
     </div>
+
+ 
 </body>
 </html>
