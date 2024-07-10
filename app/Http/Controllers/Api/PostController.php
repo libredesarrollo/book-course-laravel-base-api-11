@@ -24,7 +24,7 @@ class PostController extends Controller
         //     cache()->put('post_index', $posts);
         //     return response()->json($posts);
         // }
-
+        return Post::all();
         return response()->json(Cache::remember('posts_index', now()->addMinutes(10), function () {
             return Post::all();
         }));

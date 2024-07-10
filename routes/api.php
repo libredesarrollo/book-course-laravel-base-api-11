@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\UserController;
-// use App\Http\Controllers\LoginController;
+use App\Http\Controllers\LoginController;
 
 // Route::post('user/login',[LoginController::class, 'authenticate']); 
 Route::post('user/login',[UserController::class, 'login']); 
@@ -22,9 +22,12 @@ Route::get('category/slug/{category:slug}', [CategoryController::class, 'slug'])
 Route::get('post/all', [PostController::class, 'all']);
 Route::get('post/slug/{slug}', [PostController::class, 'slug']);
 
+
+Route::resource('post', PostController::class)->except(['create', 'edit']); 
+// Route::resource('category', CategoryController::class)->except(['create', 'edit']);
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::resource('category', CategoryController::class)->except(['create', 'edit']);
-    Route::resource('post', PostController::class)->except(['create', 'edit']); 
+    // Route::resource('post', PostController::class)->except(['create', 'edit']); 
 });
 
 Route::post('post/upload/{post}',[PostController::class, 'upload']);

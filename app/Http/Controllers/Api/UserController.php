@@ -13,12 +13,10 @@ class UserController extends Controller
 {
     function login(Request $request)
     {
-
         $validator = validator()->make(
             $request->all(),
             [
                 'email' => 'required',
-                'email',
                 'password' => 'required'
             ]
         );
@@ -47,7 +45,6 @@ class UserController extends Controller
 
     function logout(Request $request)
     {
-
         if ($request->user()) {
 
             // auth()->user();
@@ -65,18 +62,20 @@ class UserController extends Controller
             $tokenHash = hash('sha256', $token);
 
             $tokenModel = PersonalAccessToken::where('token', $tokenHash)->first();
-
+            
             if($tokenModel->tokenable) {
                 return response()->json(
                     [
                         'isLoggedIn' => true,
-                        'token' => $token,
-                        'user' => auth()->user(),
+                        'token' => request('token'),
+                        // 'user' => auth()->user(),
                     ]
                 );
             }
 
-        } catch( Exception $e){}
+        } catch( Exception $e){
+      
+        }
 
         return response()->json('Invalid user', 422);
     }
