@@ -18,7 +18,6 @@ Route::get('/user', function (Request $request) {
 Route::get('category/all', [CategoryController::class, 'all']);
 Route::get('category/slug/{category:slug}', [CategoryController::class, 'slug']);
 
-
 Route::get('post/all', [PostController::class, 'all']);
 Route::get('post/slug/{slug}', [PostController::class, 'slug']);
 
