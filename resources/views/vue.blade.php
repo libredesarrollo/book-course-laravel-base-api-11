@@ -17,12 +17,15 @@
                 'isLoggedIn' => true,
                 'user' => Auth::user(),
                 'token' => session('token'),
+                'clientStripe' => config('cashier.key'),
+
             ]) !!}
         </script>
     @else
     <script>
         window.Laravel = {!! json_encode([
-            'isLoggedIn' => false
+            'isLoggedIn' => false,
+            'clientStripe' => config('cashier.key'),
         ]) !!}
     </script>
 
